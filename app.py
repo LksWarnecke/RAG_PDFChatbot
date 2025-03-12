@@ -33,15 +33,27 @@ def get_text_chunks(text):
 
 #put chunks into embedding and save in vecstorstore
 def get_vectorstore(text_chunks):
+    #huggingface embeddings
+    #embeddings = HuggingFaceHub(
+    #    repo_id="sentence-transformers/all-MiniLM-L6-v2",  # Fast & free online embedding model
+    #    task="feature-extraction"
+    #)
+
     embeddings = OpenAIEmbeddings()
-    # embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
+    
     vectorstore= FAISS.from_texts(texts=text_chunks, embedding=embeddings)
     return vectorstore
 
 # store conversation chain
 def get_conversation_chain(vectorstore):
+    #huggingface llm
+    #llm = HuggingFaceHub(
+    #    repo_id="mistralai/Mistral-7B-Instruct",
+    #    model_kwargs={"temperature": 0.5, "max_length": 512}
+    #)
+    
     llm = ChatOpenAI()
-    # llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.5, "max_length":512})
+    
     memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
